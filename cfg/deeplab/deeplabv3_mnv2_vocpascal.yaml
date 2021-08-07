@@ -1,0 +1,45 @@
+###############################################################################################
+################################# Deeplab Model Configuration #################################
+###############################################################################################
+
+deeplab_model:
+
+  # path to the frozen inference graph
+  inference_graph:
+    path: $(find object_detection)/cfg/deeplab/deeplabv3_mnv2_pascal_train_aug/frozen_inference_graph.pb
+    input_tensor: ImageTensor:0
+    output_tensor: SemanticPredictions:0
+    
+  # input size of the network
+  input_size: 
+    - 513
+    - 513
+    
+  # input is BGR (true) or RGB (false)
+  input_bgr: False
+
+  # taset properties (name and classes)
+  dataset:
+    name: pascal
+    detection_classes:
+      - background
+      - aeroplane
+      - bicycle
+      - bird
+      - boat
+      - bottle
+      - bus
+      - car
+      - cat
+      - chair
+      - cow
+      - diningtable
+      - dog
+      - horse
+      - motorbike
+      - person
+      - pottedplant
+      - sheep
+      - sofa
+      - train
+      - tv

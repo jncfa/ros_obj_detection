@@ -1,0 +1,117 @@
+#####################################################################################################################################################
+###########################################################  YOLO Model Configuration ############################################################
+#####################################################################################################################################################
+
+name: yolov4
+weights_path: $(find object_detection)/cfg/yolo/yolov4/yolov4.weights
+config_path: $(find object_detection)/cfg/yolo/yolov4/yolov4.cfg
+
+# input size of the network
+input_size:
+  - 320
+  - 320
+
+#Scalar with mean values which are subtracted from channels.
+model_mean:
+  - 0
+  - 0
+  - 0
+
+#Multiplier for frame values.
+model_scale: 0.00392
+
+#Flag which indicates that swap first and last channels.
+model_swapRGB: True
+
+#Flag which indicates whether image will be cropped after resize or not. blob(n, c, y, x) = scale * resize( frame(y, x, c) ) - mean(c) )
+model_crop: False
+
+#A threshold used to filter boxes by confidences.
+conf_threshold: 0.3
+
+#A threshold used in non maximum suppression.
+nms_threshold: 0.4
+
+dataset:
+  name: coco
+  detection_classes:
+    - person
+    - bicycle
+    - car
+    - motorbike
+    - aeroplane
+    - bus
+    - train
+    - truck
+    - boat
+    - traffic light
+    - fire hydrant
+    - stop sign
+    - parking meter
+    - bench
+    - bird
+    - cat
+    - dog
+    - horse
+    - sheep
+    - cow
+    - elephant
+    - bear
+    - zebra
+    - giraffe
+    - backpack
+    - umbrella
+    - handbag
+    - tie
+    - suitcase
+    - frisbee
+    - skis
+    - snowboard
+    - sports ball
+    - kite
+    - baseball bat
+    - baseball glove
+    - skateboard
+    - surfboard
+    - tennis racket
+    - bottle
+    - wine glass
+    - cup
+    - fork
+    - knife
+    - spoon
+    - bowl
+    - banana
+    - apple
+    - sandwich
+    - orange
+    - broccoli
+    - carrot
+    - hot dog
+    - pizza
+    - donut
+    - cake
+    - chair
+    - sofa
+    - pottedplant
+    - bed
+    - diningtable
+    - toilet
+    - tvmonitor
+    - laptop
+    - mouse
+    - remote
+    - keyboard
+    - cell phone
+    - microwave
+    - oven
+    - toaster
+    - sink
+    - refrigerator
+    - book
+    - clock
+    - vase
+    - scissors
+    - teddy bear
+    - hair drier
+    - toothbrush

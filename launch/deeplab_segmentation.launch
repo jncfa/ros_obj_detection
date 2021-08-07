@@ -1,0 +1,26 @@
+<launch>
+    <!-- Launch arguments -->
+
+    <!-- Name of DeepLab model (configuration file must be in cfg/deeplab folder) -->
+    <arg name="deeplab_model" default="deeplabv3_mnv2_vocpascal" />
+
+    <!-- If 'True', the launch file will start RViz automatically -->
+    <arg name="rviz" default="False" />
+
+    <!-- If 'True', the launch file will start the D435i camera as well -->
+    <arg name="with_camera" default="True" />
+
+    <!-- Topic name for RGB image, default is RGB topic for D435i -->
+    <arg name="rgb_image" default="/camera/color/image_raw" />
+
+    <node pkg="rviz" type="rviz" name="rviz" if="$(arg rviz)"/>
+    <include file="$(find realsense_tools)/launch/rs_camera.launch" if="$(arg with_camera)"/>
+    <rosparam command="load" file="$(find object_detection)/cfg/deeplab/$(arg deeplab_model).yaml" subst_value="True"/>
+
+    <node pkg="object_detection" type="deeplab_detection.py" name="deeplab_detection" output="screen">
+        <remap from="image" to="$(arg rgb_image)" />
+        <remap from="output_image" to="/detection/deeplab/objects_image" />
+        <remap from="output_segmap" to="/detection/deeplab/objects_segmap" />
+    </node>
+
+</launch>

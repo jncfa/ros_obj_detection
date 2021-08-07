@@ -1,0 +1,17 @@
+#####################################################################################################################################################
+###########################################################  YOLO Model Configuration ############################################################
+#####################################################################################################################################################
+
+blur_humans: False
+
+draw_speed: False
+
+sort_model:
+  #Minimum IOU for match
+  threshold: 0.1
+
+  #Minimum number of associated detections before track is initialised
+  min_hits: 3
+
+  #Maximum number of frames to keep alive a track without associated detections.
+  max_age: 60

@@ -1,0 +1,60 @@
+<launch>
+    <!-- Launch arguments -->
+
+    <!-- If 'True', the launch file will start the D435i camera as well -->
+    <arg name="with_camera" default="True" />
+
+    <!-- If 'True', the launch file will start RViz automatically -->
+    <arg name="rviz" default="False" />
+
+    <!-- If 'True', the YOLO node will publish an image with its detection boxes. 
+    Use this for debugging purposes only, in general the sort_tracking node output should be used instead. -->
+    <arg name="debug_yolo_output" default="True" />
+
+    <arg name="yolo_default_model" default="$(find object_detection)/cfg/yolo/yolov4.yaml" />
+    <arg name="yolo_light_model" default="$(find object_detection)/cfg/yolo/yolov3-tiny.yaml" />
+    <arg name="sort_tracking" default="$(find object_detection)/cfg/sort/sort_tracking.yaml" />
+
+    <arg name="rgb_image" default="/camera/color/image_raw" />
+    <arg name="depth_image" default="/camera/aligned_depth_to_color/image_raw" />
+    <arg name="camera_info" default="/camera/aligned_depth_to_color/camera_info" />
+
+    <node pkg="rviz" type="rviz" name="rviz" if="$(arg rviz)"/>
+    <include file="$(find realsense_tools)/launch/rs_camera.launch" if="$(arg with_camera)"/>
+
+    <!-- Default yolo model -->
+    <group ns="yolo_model">
+        <!-- Use subst_value to allow substitution patterns like ($find package)... -->
+        <rosparam command="load" file="$(arg yolo_default_model)" subst_value="True" />
+    </group>
+
+    <!-- Light model -->
+    <group ns="yolo_light_model">
+        <!-- Use subst_value to allow substitution patterns like ($find package)... -->
+        <rosparam command="load" file="$(arg yolo_light_model)" subst_value="True" />
+    </group>
+
+    <node pkg="object_detection" type="yolo_detection.py" name="yolo_node" output="screen">
+        <param name="show_output" value="$(arg debug_yolo_output)"/>
+        <remap from="image" to="/camera/color/image_raw" />
+        <remap from="output_image" to="/detection/yolo/objects_image" />
+        <remap from="bounding_boxes" to="/detection/yolo/bboxes" />
+        <remap from="depth_image" to="/camera/aligned_depth_to_color/image_raw" />
+    </node>
+
+    <node pkg="object_detection" type="sort_tracking.py" name="sort_node" output="screen">
+
+        <remap from="image" to="$(arg rgb_image)" />
+        <remap from="camera_info" to="$(arg camera_info)" />
+        <remap from="depth_image" to="$(arg depth_image)" />
+
+        <remap from="bounding_boxes" to="/detection/yolo/bboxes" />
+        <remap from="output_image" to="/tracking/yolo/objects_image" />
+        <remap from="object" to="/tracking/yolo/object" />
+
+        <param name="draw_speed" value="true"/>
+        <rosparam command="load" file="$(arg sort_tracking)" />
+
+    </node>
+
+</launch>
